@@ -1,18 +1,19 @@
 const Post = require("../models/Post");
 
-// CREATE POST
+// ================= CREATE POST =================
 exports.createPost = async (req, res) => {
   console.log("CREATE POST HIT");
 
   try {
     const { content } = req.body;
 
-    const post = new Post({
+    const post = await Post.create({
       user: req.user.userId,
       content
     });
 
-    await post.save();
+    // 🔥 IMPORTANT: populate so frontend gets full user object
+    await post.populate("user", "name email");
 
     res.json(post);
 
@@ -21,7 +22,7 @@ exports.createPost = async (req, res) => {
   }
 };
 
-// GET ALL POSTS
+// ================= GET ALL POSTS =================
 exports.getPosts = async (req, res) => {
   try {
     const posts = await Post.find()
@@ -35,7 +36,7 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-// LIKE / UNLIKE POST
+// ================= LIKE / UNLIKE POST =================
 exports.likePost = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -60,7 +61,7 @@ exports.likePost = async (req, res) => {
 
     await post.save();
 
-    return res.json({
+    res.json({
       msg: index === -1 ? "Liked" : "Unliked",
       likesCount: post.likes.length
     });
@@ -70,7 +71,7 @@ exports.likePost = async (req, res) => {
   }
 };
 
-// DELETE POST
+// ================= DELETE POST =================
 exports.deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -79,7 +80,7 @@ exports.deletePost = async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    // ✅ OWNER CHECK
+    // 🔥 OWNER CHECK
     if (post.user.toString() !== req.user.userId) {
       return res.status(403).json({ msg: "Not authorized" });
     }
