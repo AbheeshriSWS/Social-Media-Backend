@@ -73,8 +73,21 @@ exports.likePost = async (req, res) => {
 // DELETE POST
 exports.deletePost = async (req, res) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
-    res.json({ msg: "Post deleted" });
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    // ✅ OWNER CHECK
+    if (post.user.toString() !== req.user.userId) {
+      return res.status(403).json({ msg: "Not authorized" });
+    }
+
+    await post.deleteOne();
+
+    res.json({ msg: "Post deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
