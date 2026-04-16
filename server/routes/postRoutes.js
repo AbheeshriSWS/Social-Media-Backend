@@ -8,7 +8,7 @@ const {
   deletePost
 } = require("../controllers/postController");
 
-const upload = require("../middleware/upload");
+const upload = require("../middleware/uploadMiddleware");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Models (IMPORTANT for feed)
