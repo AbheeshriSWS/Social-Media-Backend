@@ -8,6 +8,7 @@ const {
   deletePost
 } = require("../controllers/postController");
 
+const upload = require("../middleware/upload");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Models (IMPORTANT for feed)
@@ -15,8 +16,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 
 // create post (protected)
-router.post("/", authMiddleware, createPost);
-
+router.post("/", authMiddleware, upload.array("images", 10), createPost);
 // get all posts
 router.get("/", getPosts);
 
