@@ -10,7 +10,7 @@ exports.createPost = async (req, res) => {
     const post = await Post.create({
       user: req.user.userId,
       content: req.body.content,
-      images: req.files ? req.files.map(file => `/uploads/${file.filename}`) : []
+      images: req.files ? req.files.map(file => file.path) : []
     });
 
     // 🔥 IMPORTANT: populate so frontend gets full user object
