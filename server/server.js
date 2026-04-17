@@ -3,13 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs");
 require("dotenv").config();
+const path = require("path");
 
 const app = express();
 
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/uploads", express.static("uploads"));
 
 // Middleware

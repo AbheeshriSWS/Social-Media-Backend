@@ -47,6 +47,7 @@ router.get("/feed", authMiddleware, async (req, res) => {
     const formattedPosts = posts.map(post => ({
       _id: post._id,
       content: post.content,
+      images: post.images,   
       user: post.user,
       likesCount: post.likes.length,
       createdAt: post.createdAt

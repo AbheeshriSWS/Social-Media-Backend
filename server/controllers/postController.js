@@ -2,23 +2,18 @@ const Post = require("../models/Post");
 
 // ================= CREATE POST =================
 exports.createPost = async (req, res) => {
-  console.log("CREATE POST HIT");
-  console.log("FILES:", req.files);
-  console.log("BODY:", req.body);
-
   try {
     const post = await Post.create({
       user: req.user.userId,
-      content: req.body.content || "",
-      images: req.files ? req.files.map(file => file.path) : []
+      content: req.body.content,
+      images: req.files ? req.files.map(file => file.secure_url) : []
     });
 
     await post.populate("user", "name email");
 
-    res.status(201).json(post);
-
+    res.json(post);
   } catch (err) {
-    console.log("POST ERROR:", err);
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
