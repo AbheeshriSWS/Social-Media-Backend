@@ -13,8 +13,8 @@ exports.createPost = async (req, res) => {
 
     res.json(post);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
+    console.error("CREATE POST ERROR:", err); // full stack
+    res.status(500).json({ error: err.message, stack: err.stack });
   }
 };
 

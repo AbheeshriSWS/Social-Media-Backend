@@ -6,6 +6,11 @@ require("dotenv").config();
 const path = require("path");
 
 const app = express();
+// WITH THIS
+app.use(cors({
+  origin: ["https://social-media-frontend-red.vercel.app", "http://localhost:5173"],
+  credentials: true
+}));
 
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
@@ -15,10 +20,6 @@ app.use("/uploads", express.static("uploads"));
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: "*",
-  credentials: true
-}));
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
