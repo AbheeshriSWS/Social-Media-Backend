@@ -3,22 +3,22 @@ const Post = require("../models/Post");
 // ================= CREATE POST =================
 exports.createPost = async (req, res) => {
   console.log("CREATE POST HIT");
+  console.log("FILES:", req.files);
+  console.log("BODY:", req.body);
 
   try {
-    const { content } = req.body;
-
     const post = await Post.create({
       user: req.user.userId,
-      content: req.body.content,
+      content: req.body.content || "",
       images: req.files ? req.files.map(file => file.path) : []
     });
 
-    // 🔥 IMPORTANT: populate so frontend gets full user object
     await post.populate("user", "name email");
 
-    res.json(post);
+    res.status(201).json(post);
 
   } catch (err) {
+    console.log("POST ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };
