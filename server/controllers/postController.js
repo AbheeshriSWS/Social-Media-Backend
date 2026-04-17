@@ -6,7 +6,7 @@ exports.createPost = async (req, res) => {
     const post = await Post.create({
       user: req.user.userId,
       content: req.body.content,
-      images: req.files ? req.files.map(file => file.secure_url) : []
+      images: req.files ? req.files.map(file => file.path) : []
     });
 
     await post.populate("user", "name email");
