@@ -3,6 +3,10 @@ const Post = require("../models/Post");
 // ================= CREATE POST =================
 exports.createPost = async (req, res) => {
   try {
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+    console.log("USER:", req.user);
+
     const post = await Post.create({
       user: req.user.userId,
       content: req.body.content,
@@ -10,11 +14,11 @@ exports.createPost = async (req, res) => {
     });
 
     await post.populate("user", "name email");
-
     res.json(post);
+
   } catch (err) {
-    console.error("CREATE POST ERROR:", err); // full stack
-    res.status(500).json({ error: err.message, stack: err.stack });
+    console.error("CREATE POST ERROR:", err.message);
+    res.status(500).json({ error: err.message });
   }
 };
 
